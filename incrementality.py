@@ -8,6 +8,7 @@ Date: 01-09-2020
 """
 
 import os
+from math import sqrt, exp
 
 import numpy as np
 import pandas as pd
@@ -76,14 +77,22 @@ if __name__ == '__main__':
     # Group them by dimension and calculate Aggregate measure
     for dimension, df_dim_dateset in beer_hawk_inc.groupby('dimension_type'):
         q = get_q_value(df_dim_dateset)
-        tow=get_tow_value(df_dim_dateset,q)
-        #adjusted weight
-        beer_hawk_inc['w_adj']=1 / (beer_hawk_inc['vari'] +(tow**2))
-        beer_hawk_inc['w_adj_log_rr']=beer_hawk_inc['w_adj'] * beer_hawk_inc['log_rr']
-        agg_theta= beer_hawk_inc['w_adj_log_rr'].sum()/beer_hawk_inc['w_adj'].sum()
-        print(agg_theta)
+        tow = get_tow_value(df_dim_dateset, q)
+        beer_hawk_inc_dim = beer_hawk_inc[beer_hawk_inc['dimension_type'] == dimension]
+        # adjusted weight
+        beer_hawk_inc_dim['w_adj'] = 1 / (beer_hawk_inc_dim['vari'] + (tow ** 2))
+        beer_hawk_inc_dim['w_adj_log_rr'] = beer_hawk_inc_dim['w_adj'] * beer_hawk_inc_dim['log_rr']
+        agg_theta = beer_hawk_inc_dim['w_adj_log_rr'].sum() / beer_hawk_inc_dim['w_adj'].sum()
+        agg_variance = 1 / beer_hawk_inc_dim['w_adj'].sum()
         # Aggregate incrementality
-        agg_inc=1-
+        agg_inc = 1 - exp(agg_theta)
+        print('Aggregate incrementality for dimenstion: ', dimension, ' is: ', agg_inc)
+        # Aggregate Confidence interval
+        agg_ci_lb = 1 - exp(agg_theta + (1.96 * sqrt(agg_variance)))
+        agg_ci_ub = 1 + exp(agg_theta + (1.96 * sqrt(agg_variance)))
+        print('For dimension:', dimension)
+        print('Aggregate incrementality: ', agg_inc)
+        print('confidence interval: ', agg_ci_lb, agg_ci_ub)
 
     print('Done')
 
