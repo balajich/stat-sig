@@ -19,22 +19,41 @@ def get_q_value(dataset):
 
 
 def get_tow_value(dataset, q):
-    tow = 0
+    toue = 0
     k = len(dataset)
     if q > k - 1:
-        tow = (q-k-1)/(dataset['w'].sum() - (dataset['w_sq'].sum() / dataset['w'].sum()))
-    return tow
+        toue = (q - k - 1) / (dataset['w'].sum() - (dataset['w_sq'].sum() / dataset['w'].sum()))
+    return toue
 
 
 def apply_zero_correction_factor(row):
+    ''' with sample size'''
     if (row["ctrl_conv"] == 0):
-        # row["zc_ctrl_conv"] = 1 / row["control_reach"]
+        row["zc_ctrl_conv"] = 1 / row["control_reach"]
+        row["zc_control_reach"] = row["control_reach"] + (2 / row["control_reach"])
+        row["zc_test_conv"] = row["test_conv"] + (1 / row["test_reach"])
+        row["zc_test_reach"] = row["test_reach"] + (2 / row["test_reach"])
+    if (row["test_conv"] == 0 and row["zc_test_conv"] == 0):
+        row["zc_test_conv"] = 1 / row["test_reach"]
+        row["zc_test_reach"] = row["test_reach"] + (2 / row["test_reach"])
+        row["zc_ctrl_conv"] = row["ctrl_conv"] + (1 / row["control_reach"])
+        row["zc_control_reach"] = row["control_reach"] + (2 / row["control_reach"])
+
+    return row
+
+
+def apply_zero_correction_factor_static(row):
+    if (row["ctrl_conv"] == 0):
         row["zc_ctrl_conv"] = 0.5
         row["zc_control_reach"] = row["control_reach"] + 1
-    if (row["test_conv"] == 0):
-        # row["zc_test_conv"] = 1 / row["test_reach"]
+        row["zc_test_conv"] = row["test_conv"] + 0.5
+        row["zc_test_reach"] = row["test_reach"] + 1
+    if (row["test_conv"] == 0 and row["zc_test_conv"] == 0):
         row["zc_test_conv"] = 0.5
         row["zc_test_reach"] = row["test_reach"] + 1
+        row["zc_ctrl_conv"] = row["ctrl_conv"] + 0.5
+        row["zc_control_reach"] = row["control_reach"] + 1
+
     return row
 
 
@@ -105,6 +124,6 @@ if __name__ == '__main__':
         agg_ci_ub = 1 - exp(agg_theta - (1.96 * sqrt(agg_variance)))
         print('For dimension:', dimension)
         print('Aggregate incrementality: ', agg_inc)
-        #print('confidence interval lower bound: ', agg_ci_lb)
-        #print('confidence interval upper bound: ', agg_ci_ub)
+        # print('confidence interval lower bound: ', agg_ci_lb)
+        # print('confidence interval upper bound: ', agg_ci_ub)
     print('Done')
