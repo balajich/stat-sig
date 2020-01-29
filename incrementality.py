@@ -59,8 +59,8 @@ def apply_zero_correction_factor_static(row):
 
 if __name__ == '__main__':
     print('Begin Analysis')
-    os.chdir("/home/mario/work/measured")
-    dataset_orginal = pd.read_excel("/home/mario/work/measured/Beer Hawk.xlsx", sheet_name=0)
+
+    dataset_orginal = pd.read_excel("./data/Beer Hawk.xlsx", sheet_name=0)
     reqvars = ['dimension_type', 'dimension_value', 'cuts', 'interval_start_date', 'interval_end_date',
                'control_reach', 'ctrl_conv', 'test_reach', 'test_conv']
     dataset = dataset_orginal.loc[:, reqvars]
@@ -110,12 +110,12 @@ if __name__ == '__main__':
     for dimension, df_dim_dateset in dataset.groupby('dimension_type'):
         q = get_q_value(df_dim_dateset)
         tow = get_tow_value(df_dim_dateset, q)
-        beer_hawk_inc_dim = dataset[dataset['dimension_type'] == dimension]
+        dataset_dim = dataset[dataset['dimension_type'] == dimension]
         # adjusted weight
-        beer_hawk_inc_dim['w_adj'] = 1 / (beer_hawk_inc_dim['vari'] + (tow ** 2))
-        beer_hawk_inc_dim['w_adj_log_rr'] = beer_hawk_inc_dim['w_adj'] * beer_hawk_inc_dim['log_rr']
-        agg_theta = beer_hawk_inc_dim['w_adj_log_rr'].sum() / beer_hawk_inc_dim['w_adj'].sum()
-        agg_variance = 1 / beer_hawk_inc_dim['w_adj'].sum()
+        dataset_dim['w_adj'] = 1 / (dataset_dim['vari'] + (tow ** 2))
+        dataset_dim['w_adj_log_rr'] = dataset_dim['w_adj'] * dataset_dim['log_rr']
+        agg_theta = dataset_dim['w_adj_log_rr'].sum() / dataset_dim['w_adj'].sum()
+        agg_variance = 1 / dataset_dim['w_adj'].sum()
         # Aggregate incrementality
         agg_inc = 1 - exp(agg_theta)
         # print('Aggregate incrementality for dimension: ', dimension)

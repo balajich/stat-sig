@@ -1,0 +1,14 @@
+For dimension: Adset
+Aggregate incrementality:  0.6672639426997375
+For dimension: Campaign
+Aggregate incrementality:  0.749098180471118
+For dimension: Custom Audience
+Aggregate incrementality:  0.6927427958522134
+For dimension: Publisher Platforms
+Aggregate incrementality:  0.6564992146821989
+For dimension: Summary
+Aggregate incrementality:  0.7798250549343658
+Done
+
+9505345500- nagre
+
