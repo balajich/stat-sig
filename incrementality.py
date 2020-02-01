@@ -157,5 +157,3 @@ if __name__ == '__main__':
     raw_dir_path = './data/raw/FB-Aggregation-Science/*'
     processed_dir_path = './data/processed/FB-Aggregation-Science/'
     do_meta_analysis(get_files_in_directory(raw_dir_path), processed_dir_path)
-    # files = get_files_in_directory('./data/raw/FB-Aggregation-Science/*')
-    # do_meta_analysis(['./data/raw/FB-Aggregation-Science/Beer Hawk.xlsx'], processed_dir_path)
