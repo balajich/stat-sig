@@ -628,6 +628,24 @@
       <column caption='ci_l' datatype='real' name='[Calculation_231653922712772620]' role='measure' type='quantitative'>
         <calculation class='tableau' formula='1 - EXP([Calculation_231653922710441993] + (1.96 * SQRT([Calculation_231653922711977994])))' />
       </column>
+      <column caption='w' datatype='real' name='[Calculation_231653922715922445]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='1 / [Calculation_231653922711977994]' />
+      </column>
+      <column caption='w_sq' datatype='real' name='[Calculation_231653922716069902]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[Calculation_231653922715922445] * [Calculation_231653922715922445]' />
+      </column>
+      <column caption='w_log_rr' datatype='real' name='[Calculation_231653922716323855]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[Calculation_231653922715922445] * [Calculation_231653922710441993]' />
+      </column>
+      <column caption='log_rr_sq' datatype='real' name='[Calculation_231653922716532752]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[Calculation_231653922710441993] * [Calculation_231653922710441993]' />
+      </column>
+      <column caption='w_log_rr_sq' datatype='real' name='[Calculation_231653922716819473]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[Calculation_231653922715922445] * [Calculation_231653922716532752]' />
+      </column>
+      <column caption='q' datatype='real' name='[Calculation_231653922717171730]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='SUM([Calculation_231653922716819473]) - (SUM([Calculation_231653922716819473])*SUM([Calculation_231653922716819473])) / SUM([Calculation_231653922715922445])' />
+      </column>
       <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
         <calculation class='tableau' formula='1' />
       </column>
