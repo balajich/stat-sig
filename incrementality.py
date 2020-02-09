@@ -113,21 +113,27 @@ def do_meta_analysis(files, output_dir):
         results = []
         # Meta-analysis of Adset
         # Group them by dimension and calculate Aggregate measure
-        for dimension, df_dim_dateset in dataset.groupby('dimension_type'):
-            q = get_q_value(df_dim_dateset)
-            tow = get_tow_value(df_dim_dateset, q)
-            dataset_dim = dataset[dataset['dimension_type'] == dimension]
+        for dimension, dataset_dim in dataset.groupby('dimension_type'):
+            q = get_q_value(dataset_dim)
+            tow = get_tow_value(dataset_dim, q)
+            dataset_dim['q'] = q
+            dataset_dim['tow'] = tow
             # adjusted weight
             dataset_dim['w_adj'] = 1 / (dataset_dim['vari'] + (tow ** 2))
             dataset_dim['w_adj_log_rr'] = dataset_dim['w_adj'] * dataset_dim['log_rr']
             agg_theta = dataset_dim['w_adj_log_rr'].sum() / dataset_dim['w_adj'].sum()
+            dataset_dim['agg_theta'] = agg_theta
             agg_variance = 1 / dataset_dim['w_adj'].sum()
+            dataset_dim['agg_variance'] = agg_variance
             # Aggregate incrementality
             agg_inc = 1 - exp(agg_theta)
+            dataset_dim['agg_inc'] = agg_inc
             # print('Aggregate incrementality for dimension: ', dimension)
             # Aggregate Confidence interval
             agg_ci_lb = 1 - exp(agg_theta + (1.96 * sqrt(agg_variance)))
+            dataset_dim['agg_ci_lb'] = agg_ci_lb
             agg_ci_ub = 1 - exp(agg_theta - (1.96 * sqrt(agg_variance)))
+            dataset_dim['agg_ci_ub'] = agg_ci_ub
             print('For dimension:', dimension)
             print('Aggregate incrementality: ', agg_inc)
             print('confidence interval lower bound: ', agg_ci_lb)
