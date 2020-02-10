@@ -592,6 +592,16 @@
       </connection>
       <aliases enabled='yes' />
       <column caption='%Inc' datatype='real' name='[%inc]' role='measure' type='quantitative' />
+      <column caption='tow' datatype='real' name='[Calculation_192810376305065986]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='([Calculation_231653922717171730] - WINDOW_SUM(COUNT([id])) - 1) / (WINDOW_SUM(SUM([Calculation_231653922715922445])) - (WINDOW_SUM(SUM([Calculation_231653922716069902])) / WINDOW_SUM(SUM([Calculation_231653922715922445]))))'>
+          <table-calc ordering-type='Rows' />
+        </calculation>
+      </column>
+      <column caption='qd' datatype='real' name='[Calculation_192810376427458563]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[Calculation_231653922717171730]'>
+          <table-calc ordering-type='Rows' />
+        </calculation>
+      </column>
       <column caption='zc_ctrl_conv' datatype='real' name='[Calculation_231653922704007169]' role='measure' type='quantitative'>
         <calculation class='tableau' formula='if [ctrl_conv] == 0 THEN 0.5 ELSE [ctrl_conv] END' />
       </column>
@@ -644,7 +654,9 @@
         <calculation class='tableau' formula='[Calculation_231653922715922445] * [Calculation_231653922716532752]' />
       </column>
       <column caption='q' datatype='real' name='[Calculation_231653922717171730]' role='measure' type='quantitative'>
-        <calculation class='tableau' formula='SUM([Calculation_231653922716819473]) - (SUM([Calculation_231653922716819473])*SUM([Calculation_231653922716819473])) / SUM([Calculation_231653922715922445])' />
+        <calculation class='tableau' formula='WINDOW_SUM(SUM([Calculation_231653922716819473])) - ((WINDOW_SUM(SUM([Calculation_231653922716323855]))*WINDOW_SUM(SUM([Calculation_231653922716323855])))/WINDOW_SUM(SUM([Calculation_231653922715922445])))'>
+          <table-calc ordering-type='Rows' />
+        </calculation>
       </column>
       <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
         <calculation class='tableau' formula='1' />
@@ -679,7 +691,7 @@
       <column caption='Test Reach' datatype='integer' name='[test_reach]' role='measure' type='quantitative' />
       <column caption='Test Revenue' datatype='real' name='[test_revenue]' role='measure' type='quantitative' />
       <column caption='Z Score' datatype='real' name='[z score]' role='measure' type='quantitative' />
-      <layout dim-ordering='alphabetic' dim-percentage='0.556017' measure-ordering='alphabetic' measure-percentage='0.443983' show-structure='true' />
+      <layout dim-ordering='alphabetic' dim-percentage='0.543568' measure-ordering='alphabetic' measure-percentage='0.456432' show-structure='true' />
       <semantic-values>
         <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
       </semantic-values>
@@ -689,16 +701,89 @@
     <worksheet name='Sheet 1'>
       <table>
         <view>
-          <datasources />
+          <datasources>
+            <datasource caption='Beer Hawk-data' name='federated.04ey6bh1bfuhr41dut5g00huy7wg' />
+          </datasources>
+          <datasource-dependencies datasource='federated.04ey6bh1bfuhr41dut5g00huy7wg'>
+            <column caption='tow' datatype='real' name='[Calculation_192810376305065986]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='([Calculation_231653922717171730] - WINDOW_SUM(COUNT([id])) - 1) / (WINDOW_SUM(SUM([Calculation_231653922715922445])) - (WINDOW_SUM(SUM([Calculation_231653922716069902])) / WINDOW_SUM(SUM([Calculation_231653922715922445]))))'>
+                <table-calc ordering-type='Rows' />
+              </calculation>
+            </column>
+            <column caption='zc_ctrl_conv' datatype='real' name='[Calculation_231653922704007169]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='if [ctrl_conv] == 0 THEN 0.5 ELSE [ctrl_conv] END' />
+            </column>
+            <column caption='zc_control_reach' datatype='integer' name='[Calculation_231653922704228354]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='if [ctrl_conv] == 0 THEN [control_reach] + 1 ELSE [control_reach] END' />
+            </column>
+            <column caption='zc_test_reach' datatype='integer' name='[Calculation_231653922704359427]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='if [ctrl_conv] == 0 THEN [test_reach] + 1 ELSE [test_reach] END' />
+            </column>
+            <column caption='zc_test_conv' datatype='real' name='[Calculation_231653922704490500]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='if [ctrl_conv] == 0 THEN [test_conv] + 0.5 ELSE [test_conv] END' />
+            </column>
+            <column caption='pc' datatype='real' name='[Calculation_231653922709520389]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='[Calculation_231653922704007169]/[Calculation_231653922704228354]' />
+            </column>
+            <column caption='pt' datatype='real' name='[Calculation_231653922709774342]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='[Calculation_231653922704490500] / [Calculation_231653922704359427]' />
+            </column>
+            <column caption='rr' datatype='real' name='[Calculation_231653922709962759]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='[Calculation_231653922709520389] /[Calculation_231653922709774342]' />
+            </column>
+            <column caption='log_rr' datatype='real' name='[Calculation_231653922710441993]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='LOG([Calculation_231653922709962759],2.718281)' />
+            </column>
+            <column caption='vari' datatype='real' name='[Calculation_231653922711977994]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='(1 / [Calculation_231653922704007169]) - (1 / [Calculation_231653922704228354]) + (1 / [Calculation_231653922704490500]) - (1 / [Calculation_231653922704359427])' />
+            </column>
+            <column caption='w' datatype='real' name='[Calculation_231653922715922445]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='1 / [Calculation_231653922711977994]' />
+            </column>
+            <column caption='w_sq' datatype='real' name='[Calculation_231653922716069902]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='[Calculation_231653922715922445] * [Calculation_231653922715922445]' />
+            </column>
+            <column caption='w_log_rr' datatype='real' name='[Calculation_231653922716323855]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='[Calculation_231653922715922445] * [Calculation_231653922710441993]' />
+            </column>
+            <column caption='log_rr_sq' datatype='real' name='[Calculation_231653922716532752]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='[Calculation_231653922710441993] * [Calculation_231653922710441993]' />
+            </column>
+            <column caption='w_log_rr_sq' datatype='real' name='[Calculation_231653922716819473]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='[Calculation_231653922715922445] * [Calculation_231653922716532752]' />
+            </column>
+            <column caption='q' datatype='real' name='[Calculation_231653922717171730]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='WINDOW_SUM(SUM([Calculation_231653922716819473])) - ((WINDOW_SUM(SUM([Calculation_231653922716323855]))*WINDOW_SUM(SUM([Calculation_231653922716323855])))/WINDOW_SUM(SUM([Calculation_231653922715922445])))'>
+                <table-calc ordering-type='Rows' />
+              </calculation>
+            </column>
+            <column caption='Control Reach' datatype='integer' name='[control_reach]' role='measure' type='quantitative' />
+            <column caption='Ctrl Conv' datatype='real' name='[ctrl_conv]' role='measure' type='quantitative' />
+            <column caption='Id' datatype='string' name='[id]' role='dimension' type='nominal' />
+            <column caption='Test Conv' datatype='integer' name='[test_conv]' role='measure' type='quantitative' />
+            <column caption='Test Reach' datatype='integer' name='[test_reach]' role='measure' type='quantitative' />
+            <column-instance column='[Calculation_192810376305065986]' derivation='User' name='[usr:Calculation_192810376305065986:qk]' pivot='key' type='quantitative'>
+              <table-calc ordering-type='Rows' />
+              <table-calc field='[federated.04ey6bh1bfuhr41dut5g00huy7wg].[Calculation_231653922717171730]' ordering-type='Rows' />
+            </column-instance>
+          </datasource-dependencies>
           <aggregation value='true' />
         </view>
         <style />
         <panes>
-          <pane selection-relaxation-option='selection-relaxation-allow'>
+          <pane id='1' selection-relaxation-option='selection-relaxation-allow'>
             <view>
               <breakdown value='auto' />
             </view>
             <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.04ey6bh1bfuhr41dut5g00huy7wg].[usr:Calculation_192810376305065986:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+              </style-rule>
+            </style>
           </pane>
         </panes>
         <rows />
@@ -733,19 +818,19 @@
     </window>
   </windows>
   <thumbnails>
-    <thumbnail height='192' name='Sheet 1' width='192'>
-      iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAA7DAAAOwwHHb6hk
-      AAACFUlEQVR4nO3TMQEAIAzAMMC/5yFjRxMFfXpnZg5Eve0A2GQA0gxAmgFIMwBpBiDNAKQZ
-      gDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFI
-      MwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQD
-      kGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBp
-      BiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA
-      0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDN
-      AKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxA
-      mgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZ
-      gDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFI
-      MwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKR9Y+0F
-      fBUOM1sAAAAASUVORK5CYII=
+    <thumbnail height='24' name='Sheet 1' width='64'>
+      iVBORw0KGgoAAAANSUhEUgAAAEAAAAAYCAYAAABKtPtEAAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAACCUlEQVRYhe2Yv8tpcRzH38/NIAYDWWSRwcJ4KFmllEn5D04ZnM2PZFBKlsNA2ZTISDZF
+      iTpGYUBnp5yQHylRvs9wS508N3d4nr5X12s63+/7c969z7vvOcP5IIQQ/Mf8oh2ANu8CaAeg
+      zbsA2gFo8y6AdgDavAugHYA27wJoB6DNuwDaAWhDvYDb7QZRFJFMJhEIBCBJ0pdzx+MR6XQa
+      TqcTDMMgGAzKZgVBgMfjAcMwiEQiOBwOd225XCKbzcLv92Mymch8qRcwnU5RLBYRCARgt9v/
+      OJfP52EymdButyEIAlwuF0qlEoDfD1ipVJDL5dDv92EwGFAulwEAkiQhk8nA4XDA5/M9GpN/
+      CJ7nyWq1+lK7Xq+y9WKxIDzPE0IIaTQapFwu3zVJkkg4HCa73U52T7VaJePxWLZH/QT8LQqF
+      4n59uVzQbDZhs9kAAPv9HhaL5a5rtVrodDqcTqfnvt8f9ecYDoeo1+vgOA7BYPBbPF/mBIii
+      iG63i0QiAb1eL9M0Gg3m8/l9vdlssF6voVarn/q+TAGtVgterxdKpfJBYxgGg8EAs9kM5/MZ
+      tVoNRqMRGo3mqe8HIXR/inY6HcRisYf9Xq+HaDQKlmVhNpvBcRxGo5Fsxmq1olAoQK1WQxAE
+      pFIpbLdbuN1uxONxqFQqTCYThEKhh+8By7JgWZZ+AbR5mVfgp/gEEJSXX1vqL1oAAAAASUVO
+      RK5CYII=
     </thumbnail>
   </thumbnails>
 </workbook>
